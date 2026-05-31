@@ -86,6 +86,7 @@ async function loadTransferDetails() {
       case 'locked':
         lockedView.style.display = 'flex';
         document.getElementById('locked-title').innerText = data.title;
+        unlockPasswordInput.focus();
         break;
 
       case 'unlocked':

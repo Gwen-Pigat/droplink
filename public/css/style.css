@@ -968,4 +968,57 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.03);
   margin-top: auto;
   letter-spacing: 0.02em;
+  position: relative;
+  z-index: 10;
+}
+
+/* Animated Ambient Background Glows */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(120px);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+body::before {
+  background: var(--accent-primary);
+  top: -10vw;
+  left: -10vw;
+  animation: floatGlowOne 20s infinite alternate ease-in-out;
+}
+
+body::after {
+  background: var(--accent-purple);
+  bottom: -10vw;
+  right: -10vw;
+  animation: floatGlowTwo 25s infinite alternate ease-in-out;
+}
+
+@keyframes floatGlowOne {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(8vw, 6vh) scale(1.1);
+  }
+  100% {
+    transform: translate(-4vw, 12vh) scale(0.95);
+  }
+}
+
+@keyframes floatGlowTwo {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-8vw, -8vh) scale(0.95);
+  }
+  100% {
+    transform: translate(4vw, -4vh) scale(1.1);
+  }
 }
