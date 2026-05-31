@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropLink - Partage de fichiers & notes sécurisés</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Partagez vos fichiers et textes en toute sécurité avec mot de passe et dates d'expiration. Simple, rapide et moderne.">
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-paper-plane"></i> DropLink
+    </div>
+    <div class="tagline">Créateur de liens personnalisés, éphémères et hautement sécurisés.</div>
+  </header>
+
+  <main>
+    <!-- Left Column: Link Creator Form & Success Card -->
+    <section class="creator-section">
+      <div id="creator-panel" class="glass-panel">
+        
+        <!-- Link Creator Form -->
+        <form id="transfer-form" class="grid-container" onsubmit="return false;">
+          
+          <!-- Nom du transfert (Obligatoire) -->
+          <div class="form-group">
+            <label for="transfer-title-input">Nom du transfert (Obligatoire)</label>
+            <input type="text" id="transfer-title-input" class="input-control" placeholder="Ex: Photos de vacances, Documents de travail..." required>
+          </div>
+          
+          <!-- Drag & Drop Zone -->
+          <div class="form-group">
+            <label>Fichiers à partager</label>
+            <div id="dropzone" class="upload-zone">
+              <input type="file" id="file-input" multiple style="display: none;">
+              <div class="upload-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+              </div>
+              <div class="upload-text">
+                <h3>Glissez vos fichiers ici</h3>
+                <p>ou cliquez pour parcourir votre ordinateur (Max 100 Mo)</p>
+              </div>
+            </div>
+            <!-- Queued files list -->
+            <div id="file-list" class="file-list"></div>
+          </div>
+
+          <!-- Text content area -->
+          <div class="form-group">
+            <label for="text-content">Message ou note textuelle (Optionnel)</label>
+            <textarea id="text-content" class="input-control" placeholder="Ajoutez une note, des instructions, du code ou du texte formatté pour le destinataire..."></textarea>
+          </div>
+
+          <!-- Advanced settings collapsible -->
+          <div class="form-group">
+            <div id="settings-trigger" class="collapsible-trigger">
+              <span><i class="fa-solid fa-sliders-h" style="margin-right: 0.5rem; color: var(--accent-primary);"></i> Options avancées</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            
+            <div id="settings-content" class="collapsible-content">
+              <!-- Start Date & End Date -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                  <label for="start-date">Date d'activation</label>
+                  <input type="datetime-local" id="start-date" class="input-control">
+                </div>
+                <div class="form-group">
+                  <label for="end-date">Date d'expiration</label>
+                  <input type="datetime-local" id="end-date" class="input-control">
+                </div>
+              </div>
+
+              <!-- Password Switch and Input -->
+              <div class="switch-group">
+                <div class="switch-label">
+                  <span>Protéger par mot de passe</span>
+                  <small>Le destinataire devra saisir ce mot de passe pour y accéder</small>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="password-toggle">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div id="password-container" class="form-group" style="display: none; animation: slideIn 0.2s ease-out;">
+                <label for="password-input">Mot de passe de sécurité</label>
+                <input type="password" id="password-input" class="input-control" placeholder="Entrez un mot de passe solide">
+              </div>
+
+              <!-- Custom URL/Slug -->
+              <div class="form-group">
+                <label for="custom-slug">Lien personnalisé (Optionnel)</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <span style="position: absolute; left: 1rem; color: var(--color-text-muted); font-size: 0.9rem; user-select: none;">/link/</span>
+                  <input type="text" id="custom-slug" class="input-control" placeholder="mon-dossier-perso" style="padding-left: 4.5rem; width: 100%;">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar Area (hidden initially) -->
+          <div id="upload-progress-container" class="form-group" style="display: none; gap: 0.5rem; margin-top: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span>Envoi en cours...</span>
+              <span id="upload-percentage">0%</span>
+            </div>
+            <div class="progress-container">
+              <div id="upload-progress-bar" class="progress-bar"></div>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div id="form-error" class="message-banner error" style="display: none;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="error-text">Une erreur s'est produite.</span>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="button" id="btn-submit" class="btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Générer le lien de partage
+          </button>
+        </form>
+
+        <!-- Success Panel (hidden initially) -->
+        <div id="success-panel" class="success-card" style="display: none;">
+          <div class="success-icon">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div>
+            <h2>Votre lien est prêt !</h2>
+            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 0.25rem;">
+              Copiez le lien ci-dessous pour le partager avec vos destinataires.
+            </p>
+          </div>
+
+          <div class="share-link-box">
+            <a href="#" id="success-url" class="share-url" target="_blank">Lien de partage</a>
+            <button type="button" id="btn-copy" class="btn-copy">
+              <i class="fa-solid fa-copy"></i> Copier
+            </button>
+          </div>
+
+          <button type="button" id="btn-reset" class="btn-secondary" style="margin: 0.5rem auto 0; display: inline-flex;">
+            <i class="fa-solid fa-plus"></i> Créer un autre transfert
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Right Column: My Transfers History -->
+    <section class="history-section">
+      <div class="glass-panel" style="padding: 2rem;">
+        <h2><i class="fa-solid fa-clock-rotate-left"></i> Mes transferts</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.85rem; margin-top: 0.25rem; margin-bottom: 1.5rem;">
+          Historique des liens créés sur ce navigateur.
+        </p>
+
+        <!-- Dynamic History List -->
+        <div id="history-list" class="history-list">
+          <!-- Empty state illustration -->
+          <div class="history-empty">
+            <i class="fa-solid fa-folder-open"></i>
+            <div>Aucun transfert récent</div>
+            <p style="font-size: 0.75rem; text-align: center; max-width: 250px;">
+              Les liens que vous générez apparaîtront ici pour un accès rapide.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 DropLink. Fonctionne localement et en toute sécurité.</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

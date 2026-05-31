@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropLink - Récupérer vos fichiers</title>
+  <meta name="description" content="Téléchargez les fichiers et accédez aux notes partagées de manière sécurisée.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fa-solid fa-paper-plane"></i> DropLink
+      </a>
+    </div>
+    <div class="tagline">Récupérez et téléchargez les fichiers partagés avec vous.</div>
+  </header>
+
+  <div class="share-container">
+    <div id="status-panel" class="glass-panel">
+      
+      <!-- 1. Loading Screen -->
+      <div id="loading-view" style="text-align: center; padding: 4rem 2rem;">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1.5rem;"></i>
+        <h2>Chargement du transfert...</h2>
+        <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 0.5rem;">Vérification des accès et de la sécurité en cours.</p>
+      </div>
+
+      <!-- 2. Locked Screen (Password prompt) -->
+      <div id="locked-view" class="lock-screen" style="display: none;">
+        <div class="lock-icon">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <h2 id="locked-title">Lien sécurisé</h2>
+          <p>Ce transfert est protégé. Veuillez saisir le mot de passe pour révéler son contenu.</p>
+        </div>
+
+        <form id="unlock-form" class="lock-form" onsubmit="return false;">
+          <div class="form-group">
+            <input type="password" id="unlock-password" class="input-control" placeholder="Entrez le mot de passe" required>
+          </div>
+          
+          <!-- Password Unlock Error Banner -->
+          <div id="unlock-error" class="message-banner error" style="display: none; margin-top: 0.25rem;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Mot de passe incorrect.</span>
+          </div>
+
+          <button type="submit" id="btn-unlock" class="btn-primary" style="margin-top: 0.5rem;">
+            <i class="fa-solid fa-lock-open"></i> Déverrouiller le transfert
+          </button>
+        </form>
+      </div>
+
+      <!-- 3. Accessible Transfer Screen -->
+      <div id="unlocked-view" class="recipient-card" style="display: none;">
+        <div class="recipient-header">
+          <h2 id="transfer-title">Titre du Transfert</h2>
+          <p style="color: var(--color-text-muted); font-size: 0.85rem;">
+            <i class="fa-solid fa-calendar-day" style="margin-right: 0.25rem;"></i> Mis en ligne le <span id="transfer-date">--/--/----</span>
+            <span id="transfer-expiry-badge" style="margin-left: 0.5rem;"></span>
+          </p>
+        </div>
+
+        <!-- Text Content Area (Conditional) -->
+        <div id="text-content-section" style="display: none;">
+          <h3 class="section-title"><i class="fa-solid fa-message"></i> Message</h3>
+          <div id="text-preview" class="text-preview-card"></div>
+        </div>
+
+        <!-- Files List Area (Conditional) -->
+        <div id="files-section" style="display: none;">
+          <h3 class="section-title">
+            <i class="fa-solid fa-file-shield"></i> Fichiers (<span id="files-count">0</span>)
+          </h3>
+          <div id="download-list" class="download-list"></div>
+          
+          <button type="button" id="btn-download-all" class="btn-primary btn-download-all">
+            <i class="fa-solid fa-download"></i> Télécharger tous les fichiers
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Error/Expired/Pending Screen -->
+      <div id="error-view" class="error-screen" style="display: none;">
+        <div id="error-view-icon" class="error-icon">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+        <div>
+          <h2 id="error-view-title">Oups ! Ce lien n'est pas disponible</h2>
+          <p id="error-view-text" style="color: var(--color-text-muted); font-size: 0.95rem; margin-top: 0.5rem; max-width: 450px;">
+            Le transfert que vous recherchez est introuvable ou a peut-être expiré.
+          </p>
+        </div>
+        <a href="/" class="btn-secondary">
+          <i class="fa-solid fa-house"></i> Retourner à l'accueil
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 DropLink. Vos données sont partagées en toute confidentialité.</p>
+  </footer>
+
+  <script type="module" src="/js/share.js"></script>
+</body>
+</html>

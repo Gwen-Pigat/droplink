@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+uploads/*
+data/database.json
+test-api.js
+.git
+.dockerignore
+Dockerfile

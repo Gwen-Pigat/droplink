@@ -1,0 +1,16 @@
+# Dependency directories
+node_modules/
+
+# Local database and storage
+data/database.json
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata files
+.DS_Store
+Thumbs.db
